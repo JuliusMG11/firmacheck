@@ -14,6 +14,8 @@ function joinStreet(s: Record<string, unknown> | null | undefined): string | nul
     parts.push(`${dom}/${ori}`);
   } else if (dom != null) {
     parts.push(String(dom));
+  } else if (ori != null) {
+    parts.push(String(ori));
   }
   return parts.join(' ');
 }
@@ -57,6 +59,7 @@ export async function getCompanyByIco(ico: string): Promise<Company> {
   if (response.status === 404) {
     throw new AppError('NOT_FOUND', 404, 'Firma s tímto IČO nebyla nalezena.');
   }
+  // 400 is unreachable: IČO is always validated (mod-11) before this function is called
   if (!response.ok) {
     throw new AppError('ARES_UNAVAILABLE', 502, 'Registr ARES vrátil neočekávanou odpověď.');
   }
