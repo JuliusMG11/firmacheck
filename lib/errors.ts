@@ -1,6 +1,8 @@
+import type { ApiError } from '@/types/company';
+
 export class AppError extends Error {
   constructor(
-    public code: string,
+    public code: ApiError['code'],
     public status: number,
     message: string,
   ) {

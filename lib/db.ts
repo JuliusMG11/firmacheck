@@ -1,4 +1,4 @@
-import type { Company } from '@/types/company';
+import type { Company, SavedCompany } from '@/types/company';
 
 export type CachedCompany = { data: Company; fetchedAt: number };
 
@@ -15,16 +15,14 @@ export async function setCachedCompany(
   throw new Error('not implemented');
 }
 
-export async function getSavedCompanies(): Promise<
-  { ico: string; name: string; savedAt: string }[]
-> {
+export async function getSavedCompanies(): Promise<SavedCompany[]> {
   throw new Error('not implemented');
 }
 
 export async function saveCompany(
   _ico: string,
   _name: string,
-): Promise<{ ico: string; name: string; savedAt: string }> {
+): Promise<SavedCompany> {
   throw new Error('not implemented');
 }
 
