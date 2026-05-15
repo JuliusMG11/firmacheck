@@ -2,26 +2,95 @@
 @import 'leaflet/dist/leaflet.css';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --accent: #2563eb;
+  --accent-soft: #eff4ff;
+  --accent-ink: #1d4ed8;
+}
+
+html, body { background: #ffffff; }
+
+body {
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01","cv11";
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-instrument-serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* hero grid pattern */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(15,23,42,0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15,23,42,0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: -1px -1px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 90% at 50% 0%, #000 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse 70% 90% at 50% 0%, #000 30%, transparent 75%);
+}
+.hero-glow {
+  background:
+    radial-gradient(800px 380px at 50% -10%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 60%),
+    radial-gradient(600px 260px at 80% 0%, color-mix(in oklab, var(--accent) 7%, transparent), transparent 60%);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* shadows */
+.hairline { box-shadow: 0 0 0 1px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04); }
+.hairline-strong { box-shadow: 0 0 0 1px rgba(15,23,42,0.08), 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.10); }
+.search-shell {
+  background: white;
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.08),
+    0 1px 1px rgba(15,23,42,0.04),
+    0 12px 30px -12px rgba(15,23,42,0.16),
+    0 30px 80px -30px color-mix(in oklab, var(--accent) 35%, transparent);
+}
+.ring-accent { box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent); border-color: var(--accent); }
+
+/* accent utilities */
+.btn-primary { background: var(--accent); }
+.btn-primary:hover { background: var(--accent-ink); }
+.text-accent { color: var(--accent); }
+.text-accent-ink { color: var(--accent-ink); }
+.bg-accent-soft { background: var(--accent-soft); }
+.bg-accent { background: var(--accent); }
+.border-accent { border-color: var(--accent); }
+
+/* pulse dot for active status */
+@keyframes softPulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+.pulse-dot::after {
+  content:''; position:absolute; inset:-3px; border-radius:9999px;
+  background: currentColor; opacity:.25; animation: softPulse 2s ease-in-out infinite;
+}
+
+/* shimmer skeleton */
+@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+.shimmer {
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+/* fade-up */
+@keyframes fadeUp { from { opacity:0; transform: translateY(8px) } to { opacity:1; transform: none } }
+.fade-up { animation: fadeUp .42s cubic-bezier(.2,.7,.2,1) both; }
+
+/* nice scrollbar */
+.nice-scroll::-webkit-scrollbar { width: 8px; }
+.nice-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 8px; }
+.nice-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+/* tabular numerals */
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum","ss01"; }
+
+/* map tile fallback bg */
+.map-tile {
+  background:
+    radial-gradient(800px 400px at 50% 50%, rgba(37,99,235,0.06), transparent 60%),
+    repeating-linear-gradient(45deg, #f8fafc 0 12px, #f1f5f9 12px 24px);
 }

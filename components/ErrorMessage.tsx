@@ -1,21 +1,28 @@
+import { SearchIcon, AlertIcon } from '@/components/ui/Icons';
+
 interface ErrorMessageProps {
   code: string;
   message: string;
 }
 
-const codeLabels: Record<string, string> = {
-  INVALID_ICO: 'Neplatné IČO',
-  NOT_FOUND: 'Firma nenalezena',
-  ARES_UNAVAILABLE: 'Registr ARES nedostupný',
-  NETWORK: 'Chyba sítě',
-};
+const NOT_FOUND_CODES = new Set(['NOT_FOUND', 'INVALID_ICO']);
 
 export default function ErrorMessage({ code, message }: ErrorMessageProps) {
-  const label = codeLabels[code] ?? 'Chyba';
+  const isNotFound = NOT_FOUND_CODES.has(code);
+
   return (
-    <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
-      <p className="text-sm font-medium text-red-800 dark:text-red-400">{label}</p>
-      <p className="mt-1 text-sm text-red-700 dark:text-red-300">{message}</p>
+    <div className="bg-white rounded-3xl hairline px-8 py-12 text-center fade-up">
+      <div className={`mx-auto w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${isNotFound ? 'bg-amber-50 border border-amber-200' : 'bg-red-50 border border-red-200'}`}>
+        {isNotFound
+          ? <SearchIcon className="w-5 h-5 text-amber-600" />
+          : <AlertIcon className="w-5 h-5 text-red-600" />}
+      </div>
+      <h3 className="text-[18px] font-semibold tracking-tight text-slate-900">
+        {code === 'NOT_FOUND' ? 'Firma nebyla nalezena' :
+         code === 'INVALID_ICO' ? 'Neplatné IČO' :
+         code === 'ARES_UNAVAILABLE' ? 'ARES nedostupný' : 'Nastala chyba'}
+      </h3>
+      <p className="mt-2 text-[14px] text-slate-500 max-w-sm mx-auto">{message}</p>
     </div>
   );
 }
