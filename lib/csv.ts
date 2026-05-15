@@ -13,5 +13,5 @@ export function toCsv(
   for (const row of rows) {
     lines.push(headers.map((h) => escape(row[h] ?? '')).join(','));
   }
-  return lines.join('\n') + '\n';
+  return lines.join('\r\n') + '\r\n';
 }
