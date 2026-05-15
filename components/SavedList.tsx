@@ -1,54 +1,57 @@
 'use client';
 
 import type { SavedCompany } from '@/types/company';
-import Button from '@/components/ui/Button';
 
 interface SavedListProps {
   companies: SavedCompany[];
   onRemove: (ico: string) => void;
+  onSelect: (ico: string) => void;
 }
 
-export default function SavedList({ companies, onRemove }: SavedListProps) {
-  if (companies.length === 0) return null;
-
+export default function SavedList({ companies, onRemove, onSelect }: SavedListProps) {
   return (
-    <div className="mt-8">
+    <div>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
-          Uložené firmy
-        </h2>
-        <a
-          href="/api/export"
-          download
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium
-            bg-slate-100 text-slate-700 hover:bg-slate-200
-            dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition-colors"
-        >
-          Exportovat CSV
-        </a>
+        <h2 className="text-sm font-semibold text-slate-700">Uložené firmy</h2>
+        {companies.length > 0 && (
+          <a
+            href="/api/export"
+            download
+            className="text-xs text-slate-500 hover:text-slate-700 transition-colors"
+          >
+            Exportovat CSV
+          </a>
+        )}
       </div>
+
+      {companies.length === 0 && (
+        <p className="text-xs text-slate-400">Zatím žádné uložené firmy.</p>
+      )}
+
       <ul className="flex flex-col gap-2">
         {companies.map((company) => (
-          <li
-            key={company.ico}
-            className="flex items-center justify-between rounded-lg border border-slate-200
-              bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800"
-          >
-            <div>
-              <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+          <li key={company.ico} className="relative group">
+            <button
+              onClick={() => onSelect(company.ico)}
+              className="w-full text-left rounded-xl border border-slate-200 bg-white px-4 py-3
+                hover:border-blue-300 hover:shadow-sm transition-all"
+            >
+              <p className="text-sm font-medium text-slate-800 pr-5 truncate">
                 {company.name}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                IČO {company.ico} · uloženo {new Date(company.savedAt).toLocaleDateString('cs-CZ')}
+              <p className="text-xs text-slate-400 mt-0.5">
+                IČO {company.ico}
               </p>
-            </div>
-            <Button
-              variant="danger"
+            </button>
+            <button
               onClick={() => onRemove(company.ico)}
-              className="text-xs px-2 py-1"
+              className="absolute top-2 right-2 h-5 w-5 flex items-center justify-center
+                rounded-full text-slate-300 hover:text-red-500 hover:bg-red-50
+                opacity-0 group-hover:opacity-100 transition-all text-xs"
+              aria-label="Odebrat"
             >
-              Odebrat
-            </Button>
+              ×
+            </button>
           </li>
         ))}
       </ul>
