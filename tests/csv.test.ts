@@ -24,4 +24,14 @@ describe('toCsv', () => {
     const out = toCsv(['name'], [{ name: 'line1\nline2' }]);
     expect(out).toBe('name\n"line1\nline2"\n');
   });
+
+  it('wraps fields that contain a carriage return', () => {
+    const out = toCsv(['name'], [{ name: 'line1\rline2' }]);
+    expect(out).toBe('name\n"line1\rline2"\n');
+  });
+
+  it('handles an empty rows array', () => {
+    const out = toCsv(['ico', 'name'], []);
+    expect(out).toBe('ico,name\n');
+  });
 });

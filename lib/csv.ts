@@ -3,7 +3,7 @@ export function toCsv(
   rows: Record<string, string>[],
 ): string {
   const escape = (field: string): string => {
-    if (field.includes('"') || field.includes(',') || field.includes('\n')) {
+    if (field.includes('"') || field.includes(',') || field.includes('\n') || field.includes('\r')) {
       return '"' + field.replace(/"/g, '""') + '"';
     }
     return field;
