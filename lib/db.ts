@@ -4,37 +4,39 @@ import type { Company, SavedCompany } from '@/types/company';
 const url = process.env.TURSO_DATABASE_URL ?? 'file:./data/firmacheck.db';
 const authToken = process.env.TURSO_AUTH_TOKEN;
 
-export const db: Client = authToken
+const db: Client = authToken
   ? createClient({ url, authToken })
   : createClient({ url });
 
-let initialized = false;
+let initPromise: Promise<void> | null = null;
 
 async function ensureInit(): Promise<void> {
-  if (initialized) return;
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS companies_cache (
-      ico       TEXT PRIMARY KEY,
-      data      TEXT NOT NULL,
-      fetched_at INTEGER NOT NULL
-    )
-  `);
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS saved_companies (
-      ico      TEXT PRIMARY KEY,
-      name     TEXT NOT NULL,
-      saved_at TEXT NOT NULL
-    )
-  `);
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS geocode_cache (
-      query      TEXT PRIMARY KEY,
-      lat        REAL NOT NULL,
-      lng        REAL NOT NULL,
-      fetched_at INTEGER NOT NULL
-    )
-  `);
-  initialized = true;
+  if (initPromise) return initPromise;
+  initPromise = (async () => {
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS companies_cache (
+        ico       TEXT PRIMARY KEY,
+        data      TEXT NOT NULL,
+        fetched_at INTEGER NOT NULL
+      )
+    `);
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS saved_companies (
+        ico      TEXT PRIMARY KEY,
+        name     TEXT NOT NULL,
+        saved_at TEXT NOT NULL
+      )
+    `);
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS geocode_cache (
+        query      TEXT PRIMARY KEY,
+        lat        REAL NOT NULL,
+        lng        REAL NOT NULL,
+        fetched_at INTEGER NOT NULL
+      )
+    `);
+  })();
+  return initPromise;
 }
 
 export type CachedCompany = { data: Company; fetchedAt: number };
