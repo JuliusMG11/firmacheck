@@ -1,6 +1,17 @@
 export function toCsv(
-  _headers: string[],
-  _rows: Record<string, string>[],
+  headers: string[],
+  rows: Record<string, string>[],
 ): string {
-  throw new Error('not implemented');
+  const escape = (field: string): string => {
+    if (field.includes('"') || field.includes(',') || field.includes('\n')) {
+      return '"' + field.replace(/"/g, '""') + '"';
+    }
+    return field;
+  };
+
+  const lines: string[] = [headers.map(escape).join(',')];
+  for (const row of rows) {
+    lines.push(headers.map((h) => escape(row[h] ?? '')).join(','));
+  }
+  return lines.join('\n') + '\n';
 }
