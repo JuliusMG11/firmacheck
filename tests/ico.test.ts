@@ -6,6 +6,7 @@ describe('validateIco', () => {
     ['27074358', 'Alza'],
     ['00006947', '7-digit padded with leading zero'],
     ['68407700', 'ČVUT'],
+    ['10000020', 'remainder-1 edge case (check digit = 0)'],
   ])('accepts valid IČO %s (%s)', (ico) => {
     expect(validateIco(ico)).toBe(true);
   });

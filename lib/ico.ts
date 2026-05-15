@@ -8,6 +8,7 @@ export function validateIco(ico: string): boolean {
 
   let check: number;
   if (remainder === 0) check = 1;
+  // special rule: when remainder is 1, the valid check digit is 0
   else if (remainder === 1) check = 0;
   else check = 11 - remainder;
 
