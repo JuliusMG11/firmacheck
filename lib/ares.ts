@@ -5,17 +5,17 @@ import { getCachedCompany, setCachedCompany } from '@/lib/db';
 const ARES_BASE = 'https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
-function joinStreet(s: Record<string, unknown> | null | undefined): string | null {
-  if (!s?.nazevUlice) return null;
-  const parts = [s.nazevUlice as string];
-  const dom = s.cisloDomovni;
-  const ori = s.cisloOrientacni;
-  if (dom != null && ori != null) {
-    parts.push(`${dom}/${ori}`);
-  } else if (dom != null) {
-    parts.push(String(dom));
-  } else if (ori != null) {
-    parts.push(String(ori));
+function joinStreet(seat: Record<string, unknown> | null | undefined): string | null {
+  if (!seat?.nazevUlice) return null;
+  const parts = [seat.nazevUlice as string];
+  const houseNumber = seat.cisloDomovni;
+  const orientationNumber = seat.cisloOrientacni;
+  if (houseNumber != null && orientationNumber != null) {
+    parts.push(`${houseNumber}/${orientationNumber}`);
+  } else if (houseNumber != null) {
+    parts.push(String(houseNumber));
+  } else if (orientationNumber != null) {
+    parts.push(String(orientationNumber));
   }
   return parts.join(' ');
 }
@@ -23,7 +23,7 @@ function joinStreet(s: Record<string, unknown> | null | undefined): string | nul
 export function mapAresToCompany(raw: unknown): Company {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const r = raw as any;
-  const sidlo = r.sidlo ?? null;
+  const seat = r.sidlo ?? null;
   return {
     ico: String(r.ico),
     name: r.obchodniJmeno ?? '—',
@@ -32,10 +32,10 @@ export function mapAresToCompany(raw: unknown): Company {
     establishedAt: r.datumVzniku ?? null,
     closedAt: r.datumZaniku ?? null,
     address: {
-      full: sidlo?.textovaAdresa ?? '',
-      street: joinStreet(sidlo),
-      city: sidlo?.nazevObce ?? null,
-      psc: sidlo?.psc != null ? String(sidlo.psc) : null,
+      full: seat?.textovaAdresa ?? '',
+      street: joinStreet(seat),
+      city: seat?.nazevObce ?? null,
+      psc: seat?.psc != null ? String(seat.psc) : null,
     },
     isActive: !r.datumZaniku,
   };
